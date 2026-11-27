@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>JUPITER ’11 — Recovered Tape</title><style>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The 2011 Jupiter Incident</title><style>
 :root{color-scheme:dark;--fg:#9fe8a8}
 html,body{height:100%;margin:0;background:#000;color:var(--fg);font:20px/1.4 "Courier New",monospace;overflow:hidden;-webkit-user-select:none;user-select:none;touch-action:none}
 #app{position:fixed;inset:0;display:grid;place-items:center}
@@ -26,34 +26,32 @@ small{opacity:.7;font-size:.8em}
 #ps{top:calc(10px + env(safe-area-inset-top,0px));width:64px;height:64px;padding:0;min-height:0}
 </style></head><body>
 <div id="app"><canvas id="c"></canvas></div><div id="fx"></div>
-<div id="rec"><b>●</b> REC <span id="tc"></span><br><small>SP 10/14/2011</small></div>
+<div id="rec"><b>●</b> REC <span id="tc"></span><br><small>AUG 29 2011 07:30</small></div>
 <div id="tp"><div id="tz"></div><div id="js"><div id="kn"></div></div><button id="sp" class="tb">ACT</button><button id="ps" class="tb">❚❚</button></div>
 <section id="load" class="scr on"><h1>JUPITER ’11</h1><div id="ll" style="min-height:90px"></div><div id="bar"><i id="bi"></i></div><button id="go" hidden>▶ PLAY TAPE</button></section>
-<section id="menu" class="scr"><h1>JUPITER ’11</h1><div>RECOVERED TAPE — DO NOT DISTRIBUTE</div><button id="st">START</button><small>Real 2011 events, fictional crew.\nHeadphones recommended.</small><small id="en"></small></section>
+<section id="menu" class="scr"><h1>JUPITER ’11</h1><div>THE 2011 JUPITER INCIDENT · BLACK BOX RECOVERY</div><button id="st">START</button><small>A fictional internet horror story.\nNo real mission was lost in 2011.\nHeadphones recommended.</small><small id="en"></small></section>
 <section id="chs" class="scr"><div>SELECT CREW MEMBER</div><div class="cards" id="cards"></div></section>
 <section id="story" class="scr"><div id="tx"></div><div class="cards" id="ch2"></div><button id="nx">NEXT ▸</button></section>
 <section id="end" class="scr"><h1 id="et"></h1><div id="eb" style="max-width:560px"></div><small id="es"></small><button onclick="location.reload()">REWIND TAPE</button></section>
+<script src="characters.js"></script>
 <script>
 const $=i=>document.getElementById(i),cv=$("c"),g=cv.getContext("2d"),W=320,H=200,N=14;cv.width=W;cv.height=H;
 const G=["##############","#P..#....#..C#","#...#....#...#","#.#...##...#.#","#.#.#.##.#.#.#","#...#....#...#","###.######.###","#C..#....#...#","#...#...C#...#","#.#...##...#.#","#E#.#.##.#.#V#","##############"].map(r=>r.split(""));
 const cores=[],doors=[];G.forEach((r,y)=>r.forEach((c,x)=>{if(c=="C"){cores.push({x:x+.5,y:y+.5,k:1});r[x]="."}if(c=="P")r[x]=".";if(c=="E"||c=="V")doors.push({x:x+.5,y:y+.5,k:c})}));
-const INTRO=["AUG 5, 2011. NASA’s Juno probe leaves Florida for Jupiter.\nOCT 2011. A solar storm hits Jupiter. Its X-ray aurora flares eightfold.","SEP 27, 2011. A small moon, S/2011 J 2, is found. Then it is lost.\nWhat follows is in no archive. It was recovered from a tape aboard the ISV Mercator."];
-const CH=[{n:"Cmdr. Elena Vasquez",r:"Commander · test pilot",b:["Elena Vasquez grew up under the flight paths of Tucson. By nineteen she could name an engine by its sound.","Eleven years a test pilot. One wingman lost to a fault nobody could find. Since then she distrusts silence.","JULY 2011. The crew list has three names. The manifest has four bunks."],q:["Report the fourth bunk","Say nothing"]},
-{n:"Dmitri Orlov",r:"Flight engineer · radio",b:["Dmitri Orlov repaired radios in a Murmansk shipyard before anyone let him near a rocket.","He hears things in static that others call noise. His mother called it a gift. His doctor called it tinnitus.","After the October storm the relay began repeating a pattern. He recorded it. It sounds like his name."],q:["Play it for the crew","Delete the recording"]},
-{n:"Dr. Amara Okafor",r:"Mission doctor",b:["Amara Okafor trained as a trauma surgeon in Lagos before she studied what vacuum does to a body.","She signs every consent form herself. She remembers every patient who did not come back.","Pre-flight bloodwork shows something that belongs to none of the crew. It is identical in all three."],q:["Quarantine the crew","Keep it quiet"]}];
+
 let ac;const aud=()=>{if(ac){ac.resume();return}ac=new(window.AudioContext||webkitAudioContext)();const f=ac.createBiquadFilter(),o=ac.createGain();f.frequency.value=170;o.gain.value=.13;f.connect(o);o.connect(ac.destination);[47,47.8,71].forEach(q=>{const s=ac.createOscillator();s.type="sawtooth";s.frequency.value=q;s.connect(f);s.start()})};
 const tone=(q,d,v,ty="sine")=>{if(!ac)return;const s=ac.createOscillator(),n=ac.createGain(),T=ac.currentTime;s.type=ty;s.frequency.value=q;n.gain.setValueAtTime(v,T);n.gain.exponentialRampToValueAtTime(.001,T+d);s.connect(n);n.connect(ac.destination);s.start();s.stop(T+d)};
 const hiss=d=>{if(!ac)return;const b=ac.createBuffer(1,ac.sampleRate*d,ac.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const s=ac.createBufferSource(),n=ac.createGain();n.gain.value=.3;s.buffer=b;s.connect(n);n.connect(ac.destination);s.start()};
 const show=i=>{document.querySelectorAll(".scr").forEach(e=>e.classList.toggle("on",e.id==i))};
 const sv=()=>{try{return JSON.parse(localStorage.j11||"[]")}catch(e){return[]}};
-const L=["MOUNTING TAPE 0417…","TRACKING…","SOURCE: ISV MERCATOR","SIGNAL: S/2011 J 2","CHECKSUM FAILED. CONTINUING ANYWAY."];let pr=0,li=0;
+const L=["RECOVERED DRIVE — NOT ON ANY INVENTORY","FILE: 2011-08-29_0730_Odyssey9_BlackBox","MISSION JX-11 — CLASSIFIED","DESTINATION: EUROPA (ACTUAL: JUPITER)","CHECKSUM FAILED. CONTINUING ANYWAY."];let pr=0,li=0;
 const iv=setInterval(()=>{pr+=Math.random()*9;$("bi").style.width=Math.min(pr,100)+"%";if(pr>li*20&&li<L.length)$("ll").textContent+=L[li++]+"\n";if(pr>=100){clearInterval(iv);$("go").hidden=false}},180);
 $("go").onclick=()=>{aud();hiss(.6);$("en").textContent="ENDINGS FOUND: "+sv().length+"/3";show("menu")};
 $("st").onclick=()=>{hiss(.3);show("chs")};
 CH.forEach((c,i)=>{const b=document.createElement("button");b.innerHTML=c.n+"<br><small>"+c.r+"</small>";b.onclick=()=>{sel=i;beats=INTRO.concat(c.b);bi=0;show("story");beat()};$("cards").append(b)});
 let sel,beats,bi,tw,full,sec=0;
 function beat(){const el=$("tx"),t=beats[bi];full=t;$("ch2").innerHTML="";$("nx").hidden=true;let i=0;clearInterval(tw);tw=setInterval(()=>{el.textContent=t.slice(0,++i);if(i%3==0)tone(900,.02,.03,"square");if(i>=t.length){clearInterval(tw);full=0;fin()}},24)}
-function fin(){const last=bi==beats.length-1;if(bi==beats.length){return}if(last&&beats.length==5){CH[sel].q.forEach((q,j)=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>{sec=j;beats.push("MISSION: recover "+(sec?3:2)+"+ data cores, then reach the pod door (green).\n"+(TM?"LEFT STICK move · DRAG right side to turn · ACT to interact · ❚❚ pause":"WASD move · ←/→ or mouse turn · SPACE interact · ESC pause"));bi++;beat();bi==beats.length-1&&0};$("ch2").append(b)})}else{$("nx").hidden=false;if(bi==beats.length-1&&beats.length==6)$("nx").textContent="BEGIN ▸"}}
+function fin(){const last=bi==beats.length-1;if(bi==beats.length){return}if(last&&beats.length==5){CH[sel].q.forEach((q,j)=>{const b=document.createElement("button");b.textContent=q;b.onclick=()=>{sec=j;beats.push("MISSION: recover "+(sec?3:2)+"+ ignition parts for the escape pod, then reach the pod door (green).\n"+(TM?"LEFT STICK move · DRAG right side to turn · ACT to interact · ❚❚ pause":"WASD move · ←/→ or mouse turn · SPACE interact · ESC pause"));bi++;beat();bi==beats.length-1&&0};$("ch2").append(b)})}else{$("nx").hidden=false;if(bi==beats.length-1&&beats.length==6)$("nx").textContent="BEGIN ▸"}}
 $("nx").onclick=()=>{hiss(.15);if(bi==beats.length-1&&beats.length==6){start();return}bi++;beat()};
 $("story").onclick=e=>{if(full){clearInterval(tw);$("tx").textContent=full;full=0;fin()}};
 const K={};let p,a,E,cc,t,msg,mt,run,act,mx=0,need,hb=0,D=new Array(N*12),bt=0,stp=0;
@@ -61,25 +59,25 @@ addEventListener("keydown",e=>{K[e.code]=1;if(!act)return;if(e.code=="Space")int
 addEventListener("keyup",e=>K[e.code]=0);
 cv.onclick=()=>act&&cv.requestPointerLock&&cv.requestPointerLock();
 addEventListener("mousemove",e=>{if(document.pointerLockElement)mx+=e.movementX*.003});
-function start(){p={x:1.5,y:1.5};a=0;E={x:6.5,y:7.5};cc=0;t=0;need=sec?3:2;cores.forEach(c=>c.k=1);msg="FIND DATA CORES (0/"+need+")";mt=5;run=act=1;show("");$("rec").style.display="block";if(TM)$("tp").style.display="block";hiss(.8)}
+function start(){p={x:1.5,y:1.5};a=0;E={x:6.5,y:7.5};cc=0;t=0;need=sec?3:2;cores.forEach(c=>c.k=1);kw=0;msg="FIND POD IGNITION PARTS (0/"+need+")";mt=5;run=act=1;show("");$("rec").style.display="block";if(TM)$("tp").style.display="block";hiss(.8)}
 const solid=(x,y)=>"#EV".includes(G[y][x]);
 const free=(x,y)=>![[-.2,-.2],[.2,-.2],[-.2,.2],[.2,.2]].some(([i,j])=>solid((x+i)|0,(y+j)|0));
 function bfs(){D.fill(99);const q=[(p.y|0)*N+(p.x|0)];D[q[0]]=0;for(let i=0;i<q.length;i++){const c=q[i],x=c%N,y=c/N|0;for(const[ax,ay]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+ax,ny=y+ay,n=ny*N+nx;if(!solid(nx,ny)&&D[n]>D[c]+1){D[n]=D[c]+1;q.push(n)}}}}
 const near=()=>doors.find(d=>Math.hypot(d.x-p.x,d.y-p.y)<1.3);
-function interact(){const d=near();if(!d||!run)return;if(d.k=="V")return fin2("missing");if(cc>=need)return fin2("live");msg="POD LOCKED — CORES "+cc+"/"+need;mt=3;tone(80,.3,.4,"square")}
+function interact(){const d=near();if(!d||!run)return;if(d.k=="V")return fin2("missing");if(cc>=need)return fin2("live");msg="POD LOCKED — PARTS "+cc+"/"+need;mt=3;tone(80,.3,.4,"square")}
 function fin2(k){run=act=0;document.exitPointerLock&&document.exitPointerLock();$("rec").style.display="none";$("tp").style.display="none";hiss(1.5);const n=CH[sel].n,s=sv();if(!s.includes(k)){s.push(k);try{localStorage.j11=JSON.stringify(s)}catch(e){}}
-const T={live:["SIGNAL RECOVERED",n+" reaches the pod with "+cc+" cores. Earth hears one last transmission, in "+n+"’s own cadence, reading the crew list.\nIt lists four names."],dead:["SIGNAL LOST",n+" is declared lost at 02:14 UTC.\nWhen the Mercator is boarded, the fourth bunk has been slept in."],missing:["SUBJECT MISSING","The door opens onto no room. The tape runs 41 more minutes of an empty corridor.\nAt minute 41, someone off-camera says "+n.split(" ").pop()+"’s name."]}[k];
+const T={live:["ESCAPE POD LAUNCHED",n+" gets the engine to catch. The pod clears the Odyssey 9 with "+cc+" parts to spare.\nThe tape ends on a radio voice that is not "+n+"’s, reading the crew list.\nIt has one name too many."],dead:["ESCAPE POD FAILED",n+" hears the engine start, then stop.\n“No no no no no.”\nThe last file is an inaudible transmission. NASA logs a crewman deceased during the recording."],missing:["SIGNAL LOST — NO RECOVERY","The door opens onto no room. The tape runs 41 more minutes of an empty corridor.\nAt minute 41, someone off-camera says "+n.split(" ").pop()+"’s name."]}[k];T[1]+=n==VILLAIN?"\nThe black box shows who unlocked the hatch for the Keis. It was you.":"\nThe black box shows who unlocked the hatch for the Keis: "+VILLAIN+".";
 $("et").textContent=T[0];$("eb").textContent=T[1];$("es").textContent="ENDINGS FOUND: "+s.length+"/3";show("end")}
 function update(dt){t+=dt;const sp=2.7*dt;a+=((K.ArrowRight?1:0)-(K.ArrowLeft?1:0))*2.2*dt+mx;mx=0;
 const f=Math.max(-1,Math.min(1,((K.KeyW||K.ArrowUp)?1:0)-((K.KeyS||K.ArrowDown)?1:0)-jy)),s=Math.max(-1,Math.min(1,(K.KeyD?1:0)-(K.KeyA?1:0)+jx)),vx=(Math.cos(a)*f-Math.sin(a)*s)*sp,vy=(Math.sin(a)*f+Math.cos(a)*s)*sp;
 if(free(p.x+vx,p.y))p.x+=vx;if(free(p.x,p.y+vy))p.y+=vy;if((f||s)&&(stp-=dt)<0){stp=.4;tone(70+Math.random()*30,.06,.15,"square")}
-cores.forEach(c=>{if(c.k&&Math.hypot(c.x-p.x,c.y-p.y)<.6){c.k=0;cc++;msg="DATA CORE "+cc+"/"+need+" RECOVERED";mt=4;tone(660,.4,.2);if(cc>=need)msg+=" — REACH THE POD"}});
-if(t>8){if((bt-=dt)<0){bt=.3;bfs()}const cx=E.x|0,cy=E.y|0;let bx=p.x,by=p.y;if(cx!=(p.x|0)||cy!=(p.y|0)){let m=99;for(const[ax,ay]of[[1,0],[-1,0],[0,1],[0,-1]]){const v=D[(cy+ay)*N+cx+ax];if(v<m){m=v;bx=cx+ax+.5;by=cy+ay+.5}}}
+cores.forEach(c=>{if(c.k&&Math.hypot(c.x-p.x,c.y-p.y)<.6){c.k=0;cc++;msg="POD PART "+cc+"/"+need+" RECOVERED";mt=4;tone(660,.4,.2);if(cc>=need)msg+=" — REACH THE POD"}});
+if(t>8&&!kw){kw=1;msg="THE KEIS ARE ABOARD";mt=4;hiss(.4)}if(t>8){if((bt-=dt)<0){bt=.3;bfs()}const cx=E.x|0,cy=E.y|0;let bx=p.x,by=p.y;if(cx!=(p.x|0)||cy!=(p.y|0)){let m=99;for(const[ax,ay]of[[1,0],[-1,0],[0,1],[0,-1]]){const v=D[(cy+ay)*N+cx+ax];if(v<m){m=v;bx=cx+ax+.5;by=cy+ay+.5}}}
 const dx=bx-E.x,dy=by-E.y,l=Math.hypot(dx,dy)||1,v=(1.2+.35*cc)*(sec?.85:1)*dt;E.x+=dx/l*Math.min(v,l);E.y+=dy/l*Math.min(v,l)}
 fear=Math.max(0,1-Math.hypot(E.x-p.x,E.y-p.y)/7)*(t>8?1:0);if((hb-=dt)<0){tone(58,.14,.5);setTimeout(()=>tone(50,.16,.35),160);hb=1.4-fear*.9}
 if(t>8&&Math.hypot(E.x-p.x,E.y-p.y)<.55)fin2("dead");if(mt>0)mt-=dt;
 $("tc").textContent=[t/3600,t/60%60,t%60].map(v=>String(v|0).padStart(2,"0")).join(":")}
-let fear=0;const zb=new Array(W),fl=g.createLinearGradient(0,0,0,H);fl.addColorStop(0,"#050705");fl.addColorStop(.5,"#050705");fl.addColorStop(.5,"#0a0805");fl.addColorStop(1,"#241a10");
+let fear=0,kw=0;const zb=new Array(W),fl=g.createLinearGradient(0,0,0,H);fl.addColorStop(0,"#050705");fl.addColorStop(.5,"#050705");fl.addColorStop(.5,"#0a0805");fl.addColorStop(1,"#241a10");
 function draw(){g.fillStyle=fl;g.fillRect(0,0,W,H);const dx=Math.cos(a),dy=Math.sin(a),px=-dy*.66,py=dx*.66,fog=(7-fear*3.5)*(Math.random()<.04?.5:1),bob=Math.sin(t*9)*((K.KeyW||K.KeyS)?1.5:0);
 for(let x=0;x<W;x++){const cx=2*x/W-1,rx=dx+px*cx,ry=dy+py*cx;let mx=p.x|0,my=p.y|0;const ddx=Math.abs(1/rx),ddy=Math.abs(1/ry);let sx,sy,sdx,sdy,side=0,ch;
 if(rx<0){sx=-1;sdx=(p.x-mx)*ddx}else{sx=1;sdx=(mx+1-p.x)*ddx}if(ry<0){sy=-1;sdy=(p.y-my)*ddy}else{sy=1;sdy=(my+1-p.y)*ddy}
@@ -95,7 +93,7 @@ for(let x=Math.max(0,sx-w/2|0);x<Math.min(W,sx+w/2);x++){if(zb[x]<ty)continue;co
 if(s.k==1){const h=sz*.18*(1-d*2);g.fillStyle=`rgba(80,255,255,${b*(.6+.4*Math.sin(t*6))})`;g.fillRect(x,m+sz*.28-h,1,h*2)}
 else{g.fillStyle=`rgb(${30*b+8|0},${34*b+8|0},${36*b+8|0})`;if(d<.16)g.fillRect(x,m-sz*.3,1,sz*.8);else if(d<.48)g.fillRect(x,m-sz*.2,1,sz*(.48-d)*1.4);
 if(d<.1){g.fillStyle=`rgb(${210*b+20|0},${210*b+20|0},${200*b+20|0})`;g.fillRect(x,m-sz*.5,1,sz*.22);if(d>.025&&d<.065){g.fillStyle="#000";g.fillRect(x,m-sz*.42,1,sz*.05)}}}}}
-g.fillStyle="#000c";g.fillRect(0,H-22,W,22);g.fillStyle="#9fe8a8";g.font="13px monospace";g.fillText(CH[sel].n.split(" ").pop().toUpperCase(),6,H-7);g.fillText("CORES "+cc+"/"+need,120,H-7);g.fillStyle=fear>.5?"#e33":"#9fe8a8";g.fillText("PULSE "+(60+fear*90|0),230,H-7);
+g.fillStyle="#000c";g.fillRect(0,H-22,W,22);g.fillStyle="#9fe8a8";g.font="13px monospace";g.fillText(CH[sel].n.split(" ").pop().toUpperCase(),6,H-7);g.fillText("PARTS "+cc+"/"+need,120,H-7);g.fillStyle=fear>.5?"#e33":"#9fe8a8";g.fillText("PULSE "+(60+fear*90|0),230,H-7);
 g.fillStyle="#9fe8a8";if(mt>0)g.fillText(msg,8,16);const d=near();if(d)g.fillText((TM?"[ACT] ":"[SPACE] ")+(d.k=="E"?"OPEN POD DOOR":"OPEN"),70,H-32);
 g.fillStyle="rgba(255,255,255,.25)";for(let i=0;i<40+fear*200;i++)g.fillRect(Math.random()*W,Math.random()*H,1,1);
 if(Math.random()<.01+fear*.08){const y=Math.random()*H|0,h=4+Math.random()*20|0;g.drawImage(cv,0,y,W,h,(Math.random()-.5)*16,y,W,h)}}
